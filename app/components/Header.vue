@@ -5,7 +5,7 @@
                 Habit Tracker
             </h1>
             <button
-                class="bg-black text-white py-3 px-5 rounded-full text-sm font-medium cursor-pointer"
+                class="bg-black text-white py-3 px-5 text-sm font-medium cursor-pointer"
                 type="button"
             >
                 New Habits
