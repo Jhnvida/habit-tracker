@@ -14,7 +14,17 @@
                         @click="removeHabit(habit.id)"
                     />
 
-                    <input type="checkbox" v-model="habit.completed" />
+                    <Icon
+                        v-if="habit.completed"
+                        name="ic:baseline-check-box"
+                        @click="updateHabit(habit.id, !habit.completed)"
+                    />
+
+                    <Icon
+                        v-else
+                        name="ic:baseline-check-box-outline-blank"
+                        @click="updateHabit(habit.id, !habit.completed)"
+                    />
                 </div>
             </div>
 
@@ -26,27 +36,44 @@
                 New Habits
             </button>
         </div>
+
+        <pre>{{ habits }}</pre>
     </div>
 </template>
 
 <script setup lang="ts">
+onMounted(() => getHabits());
+
 interface Habit {
     id: number;
     name: string;
     completed: boolean;
 }
 
-const habits = useState<Habit[]>("habits", () => [
-    { id: 1, name: "Drink Water", completed: false },
-    { id: 2, name: "Exercise", completed: false },
-    { id: 3, name: "Read", completed: false },
-]);
+const habits = useState<Habit[]>("habits", () => []);
+
+function getHabits() {
+    const storedHabits = localStorage.getItem("habits");
+
+    if (storedHabits) {
+        habits.value = JSON.parse(storedHabits);
+    }
+}
 
 function addHabit(name: string) {
     habits.value.push({ id: Date.now(), name, completed: false });
+    localStorage.setItem("habits", JSON.stringify(habits.value));
 }
 
 function removeHabit(id: number) {
     habits.value = habits.value.filter((habit) => habit.id !== id);
+    localStorage.setItem("habits", JSON.stringify(habits.value));
+}
+
+function updateHabit(id: number, completed: boolean) {
+    const habit = habits.value.find((habit) => habit.id == id);
+    if (habit) habit.completed = completed;
+
+    localStorage.setItem("habits", JSON.stringify(habits.value));
 }
 </script>
